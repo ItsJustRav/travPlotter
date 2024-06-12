@@ -1,0 +1,10 @@
+name: trav_plotter 
+
+channels:
+  - conda-forge  # For numpy-stl
+
+dependencies:
+  - python  # Modify for specific Python version if needed
+  - matplotlib
+  - numpy
+  - numpy-stl
