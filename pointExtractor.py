@@ -31,8 +31,8 @@ words_to_remove = ["NULL_ID", "kpt,"]
 
 xyz_points = extract_between(text, "else", "*endif", words_to_remove)
 
-# Write tto file
+# Write to file
 with open("xyz_points.txt", "w") as output_file:
   output_file.write(xyz_points)
 
-print("Complete'")
+print('Complete')
