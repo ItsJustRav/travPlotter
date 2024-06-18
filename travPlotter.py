@@ -29,9 +29,11 @@ rows_to_skip = 0 # 1st row 0 is counted
 data_colums_to_use = (0,1,2) # 1st column 0 is counted, 3 columns minimum required.
 plot_probe_labels = True # False to hide probe labels
 name_column = (0) # Column number of the data labels, column 0 is counted
+move_probes = True
+move_probes_x, move_probes_y, move_probes_z = 0, 0, 0 # To align or move each probe as required by x, y, z amount.
 
 # STL Model
-stl_model = 'AB_.stl' #STL model location and name(case sensitive), path not required (only file name) if the model is in the same directory as the script. Will skip if path not found (leave empty to skip, i.e. '')
+stl_model = 'AB_.stl' # STL model location and name(case sensitive), path not required (only file name) if the model is in the same directory as the script. Will skip if path not found (leave empty to skip, i.e. '')
 face_colour, show_wireframe, edge_colour= 'grey', 'False', 'darkgrey' # show_wireframe: True to show edges/wireframe, False to hide edges/wireframe
 x_transform, y_transform, z_transform = 0, 0, 0 # Move the model by x, y z
 x_rotate_stl, y_rotate_stl, z_rotate_stl, degrees_rotate_stl = 0, 0, 0, 0 # Co-ordinates (x, y, z) vector to rotate about and the degrees to rotate by
@@ -95,6 +97,8 @@ if probe_data_path.exists():
     probe_data = np.loadtxt(probe_data_file, delimiter = ',', skiprows = rows_to_skip, usecols=data_colums_to_use)
     print('Data preview (first 5 lines):')
     print(probe_data[:5])
+    #if move_probes == True:
+            #moved_probe_data = probe_data[:,0] - move_probes_x
 else:
     print(f'***WARNING:Probe data file {probe_data_file} not found. Aborting...')
     time.sleep(3)
@@ -123,19 +127,21 @@ if stl_filepath.exists():
         ax.add_collection3d(poly_collection)
 else:
     print(f'***WARNING:STL model {stl_model} not found, skipping...')
+
 ## PLot 3D scatter of probe points
 #ax.scatter3D(x_data, y_data, z_data, c=point_colour, marker=probe_marker)
+
 print('Plotting probes')
 ax.scatter3D(probe_data[:, 0],probe_data[:, 1], probe_data[:, 2], c=point_colour, marker=probe_marker)
 print(f'Probe colour: {point_colour}')
 print(f'Probe marker: {probe_marker}')
 
-#if plot_probe_labels == True:
-    #print('Adding probe labels')
-    #for i, (name, x, y, z) in enumerate(probe_data):
-    #  ax.text3D(x, y, z, name, zdir='z', color='green', fontsize=8)
-#else:
-    #print('Probe labels skipped')
+if plot_probe_labels == True:
+    print('Adding probe labels')
+    for i, (probe_name, x, y, z) in enumerate(probe_data):
+      ax.text3D(x, y, z, probe_name, zdir='z', color='green', fontsize=8)
+else:
+    print('Probe labels skipped')
 
 # Graph Customisation
 print('Customising plot...')
